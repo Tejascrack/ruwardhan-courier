@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Estimator - Ruwardhan Courier</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar-custom">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="brand-title">
+        📦 Ruwardhan Courier
+      </div>
+      <div>
+        <a href="/" class="btn btn-sm btn-outline-custom me-2">Live Track</a>
+        <a href="/calculator" class="btn btn-sm btn-outline-custom me-2 active">Rate Calculator</a>
+        <a href="/book" class="btn btn-sm btn-primary-custom">+ Book Parcel</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4" style="max-width: 760px;">
+    
+    <!-- Header Icon & Title -->
+    <div class="text-center mb-4">
+      <div class="icon-circle mb-2">⚖️</div>
+      <h2 class="fw-bold">Live Rate Estimator</h2>
+      <p class="text-muted small">Instant freight quotation across domestic zones and delivery hubs.</p>
+    </div>
+
+    <div class="custom-card">
+      <div class="row g-3">
+        <!-- Origin -->
+        <div class="col-md-6">
+          <label class="form-label">Origin City / Pincode</label>
+          <input type="text" id="origin" class="form-control" value="Pune (411001)">
+        </div>
+
+        <!-- Destination -->
+        <div class="col-md-6">
+          <label class="form-label">Destination City / Pincode</label>
+          <input type="text" id="destination" class="form-control" value="Delhi (110001)">
+        </div>
+
+        <!-- Weight -->
+        <div class="col-md-6">
+          <label class="form-label">Estimated Weight (kg)</label>
+          <input type="number" id="weight" class="form-control" value="2.5" step="0.5" min="0.5" oninput="calculateRates()">
+        </div>
+
+        <!-- Delivery Urgency -->
+        <div class="col-md-6">
+          <label class="form-label">Delivery Urgency</label>
+          <select id="urgency" class="form-select" onchange="calculateRates()">
+            <option value="economy">Economy Surface (4-6 Days)</option>
+            <option value="express" selected>Standard Express (2-3 Days)</option>
+            <option value="prime">Next-Day Prime Guaranteed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="rate-section-title mt-4 mb-3">AVAILABLE FREIGHT RATES</div>
+
+      <!-- 3 Tier Pricing Cards -->
+      <div class="row g-3">
+        <!-- Surface Ground -->
+        <div class="col-md-4">
+          <div class="rate-card" id="card-ground" onclick="selectTier('ground')">
+            <div class="rate-tier-name">SURFACE GROUND</div>
+            <div class="rate-price">₹<span id="price-ground">163</span></div>
+            <div class="rate-eta">Delivery in 4-6 Days</div>
+          </div>
+        </div>
+
+        <!-- Air Express (Popular) -->
+        <div class="col-md-4">
+          <div class="rate-card selected" id="card-express" onclick="selectTier('express')">
+            <span class="badge-popular">POPULAR</span>
+            <div class="rate-tier-name text-primary">AIR EXPRESS</div>
+            <div class="rate-price text-primary">₹<span id="price-express">290</span></div>
+            <div class="rate-eta">Delivery in 2 Days</div>
+          </div>
+        </div>
+
+        <!-- Next Day Prime -->
+        <div class="col-md-4">
+          <div class="rate-card" id="card-prime" onclick="selectTier('prime')">
+            <div class="rate-tier-name text-danger">NEXT-DAY PRIME</div>
+            <div class="rate-price text-danger">₹<span id="price-prime">500</span></div>
+            <div class="rate-eta">Guaranteed Next-Day</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proceed Button -->
+      <div class="mt-4">
+        <a href="/book" class="btn btn-dark w-100 py-3 fw-bold rounded-3">PROCEED WITH BOOKING →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 Ruwardhan Courier Management System</p>
+  </footer>
+
+  <!-- Dynamic Rate Calculation Script -->
+  <script>
+    function calculateRates() {
+      const weight = parseFloat(document.getElementById('weight').value) || 1;
+      
+      // Rates formula per kg
+      const ground = Math.round(weight * 65);
+      const express = Math.round(weight * 115);
+      const prime = Math.round(weight * 200);
+
+      document.getElementById('price-ground').innerText = ground;
+      document.getElementById('price-express').innerText = express;
+      document.getElementById('price-prime').innerText = prime;
+    }
+
+    function selectTier(type) {
+      document.getElementById('card-ground').classList.remove('selected');
+      document.getElementById('card-express').classList.remove('selected');
+      document.getElementById('card-prime').classList.remove('selected');
+
+      document.getElementById('card-' + type).classList.add('selected');
+    }
+
+    // Run on page load
+    calculateRates();
+  </script>
+</body>
+</html>

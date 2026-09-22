@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operations Hub - Ruwardhan Courier</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <header class="navbar-custom">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="brand-title">
+        📦 Ruwardhan Courier
+      </div>
+      <div>
+        <a href="/" class="btn btn-sm btn-outline-custom me-1">Live Track</a>
+        <a href="/calculator" class="btn btn-sm btn-outline-custom me-1">Rate Calculator</a>
+        <a href="/operations" class="btn btn-sm btn-outline-custom active me-1">Operations Hub</a>
+        <a href="/book" class="btn btn-sm btn-primary-custom">+ Book Courier</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4">
+
+    <!-- KPI Metric Cards Grid -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="kpi-card">
+          <div class="kpi-icon bg-primary-subtle text-primary">📦</div>
+          <div>
+            <div class="kpi-label">TOTAL CONSIGNMENTS</div>
+            <div class="kpi-val">{{ total }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="kpi-card">
+          <div class="kpi-icon bg-warning-subtle text-warning">🚚</div>
+          <div>
+            <div class="kpi-label">ACTIVE IN-TRANSIT</div>
+            <div class="kpi-val">{{ in_transit }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="kpi-card">
+          <div class="kpi-icon bg-success-subtle text-success">✅</div>
+          <div>
+            <div class="kpi-label">DELIVERED</div>
+            <div class="kpi-val">{{ delivered }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="kpi-card">
+          <div class="kpi-icon bg-secondary-subtle text-secondary">⏳</div>
+          <div>
+            <div class="kpi-label">PENDING PICKUP</div>
+            <div class="kpi-val">{{ pending }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dispatch Board Card -->
+    <div class="custom-card shadow-sm border-0">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h4 class="fw-bold mb-0">Courier Operations Dispatch</h4>
+          <p class="text-muted small mb-0">Review all consignments and manage live delivery statuses.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control form-control-sm" placeholder="🔍 Search ID or name..." style="width: 220px;">
+          <select id="statusFilter" onchange="filterTable()" class="form-select form-select-sm" style="width: 160px;">
+            <option value="ALL">All Statuses</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Order Booked">Order Booked</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-responsive">
+        <table class="table align-middle table-hover" id="operationsTable">
+          <thead class="table-light">
+            <tr class="small text-muted text-uppercase" style="letter-spacing: 0.5px;">
+              <th>AWB Tracking ID</th>
+              <th>Sender</th>
+              <th>Recipient & Destination</th>
+              <th>Current Status</th>
+              <th class="text-end">Update Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in shipments %}
+            <tr>
+              <td>
+                <span class="badge bg-light text-primary border border-primary-subtle fs-6 px-2 py-1">
+                  {{ s.tracking_id }}
+                </span>
+              </td>
+              <td><strong>{{ s.sender_name }}</strong></td>
+              <td>
+                <div class="fw-semibold">{{ s.receiver_name }}</div>
+                <small class="text-muted text-truncate d-inline-block" style="max-width: 220px;">{{ s.receiver_address }}</small>
+              </td>
+              <td class="status-cell">
+                {% if s.status == 'Delivered' %}
+                  <span class="badge bg-success-subtle text-success px-2 py-1">Delivered</span>
+                {% elif s.status == 'In Transit' %}
+                  <span class="badge bg-warning-subtle text-warning px-2 py-1">In Transit</span>
+                {% else %}
+                  <span class="badge bg-info-subtle text-info px-2 py-1">{{ s.status }}</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <form action="/update_status/{{ s.id }}" method="POST" class="d-inline-flex gap-1 justify-content-end">
+                  <select name="new_status" class="form-select form-select-sm py-0" style="width: 140px; font-size: 0.82rem;">
+                    <option value="Order Booked" {% if s.status == 'Order Booked' %}selected{% endif %}>Order Booked</option>
+                    <option value="In Transit" {% if s.status == 'In Transit' %}selected{% endif %}>In Transit</option>
+                    <option value="Delivered" {% if s.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                  </select>
+                  <button type="submit" class="btn btn-sm btn-dark px-2 py-1" style="font-size: 0.78rem;">Save</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">No consignments found. Book a parcel to view entries here.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Live Client-side Search and Filter Script -->
+  <script>
+    function filterTable() {
+      const search = document.getElementById("searchInput").value.toUpperCase();
+      const status = document.getElementById("statusFilter").value.toUpperCase();
+      const rows = document.getElementById("operationsTable").getElementsByTagName("tr");
+
+      for (let i = 1; i < rows.length; i++) {
+        const text = rows[i].textContent || rows[i].innerText;
+        const matchesSearch = text.toUpperCase().indexOf(search) > -1;
+        const matchesStatus = status === "ALL" || text.toUpperCase().indexOf(status) > -1;
+
+        if (matchesSearch && matchesStatus) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
