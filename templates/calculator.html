@@ -4,57 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rate Estimator - Ruwardhan Courier</title>
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
+    .navbar-custom { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .custom-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08); }
+    .icon-circle { width: 55px; height: 55px; background: #fef3c7; color: #d97706; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .rate-card { position: relative; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+    .rate-card:hover { transform: translateY(-2px); border-color: #cbd5e1; }
+    .rate-card.selected { border-color: #2563eb !important; background: #f8faff; box-shadow: 0 0 0 2px #2563eb; }
+    .rate-tier-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; color: #64748b; margin-bottom: 0.5rem; }
+    .rate-price { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 0.4rem; }
+    .rate-eta { font-size: 0.78rem; color: #94a3b8; }
+    .badge-popular { position: absolute; top: -10px; right: 12px; background: #2563eb; color: #ffffff; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; padding: 0.2rem 0.6rem; border-radius: 10px; }
+  </style>
 </head>
 <body>
 
   <!-- Top Navbar -->
   <header class="navbar-custom">
-    <div class="container d-flex justify-content-between align-items-center">
-      <div class="brand-title">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+      <div class="fw-bold fs-5 text-dark">
         📦 Ruwardhan Courier
       </div>
-      <div>
-        <a href="/" class="btn btn-sm btn-outline-custom me-2">Live Track</a>
-        <a href="/calculator" class="btn btn-sm btn-outline-custom me-2 active">Rate Calculator</a>
-        <a href="/book" class="btn btn-sm btn-primary-custom">+ Book Parcel</a>
+      <div class="d-flex gap-2">
+        <a href="/" class="btn btn-sm btn-outline-secondary">Live Track</a>
+        <a href="/calculator" class="btn btn-sm btn-outline-secondary active">Rate Calculator</a>
+        <a href="/operations" class="btn btn-sm btn-outline-secondary">Operations Hub</a>
+        <a href="/book" class="btn btn-sm btn-primary">+ Book Parcel</a>
       </div>
     </div>
   </header>
 
   <main class="container py-4" style="max-width: 760px;">
     
-    <!-- Header Icon & Title -->
     <div class="text-center mb-4">
       <div class="icon-circle mb-2">⚖️</div>
-      <h2 class="fw-bold">Live Rate Estimator</h2>
+      <h2 class="fw-bold text-dark">Live Rate Estimator</h2>
       <p class="text-muted small">Instant freight quotation across domestic zones and delivery hubs.</p>
     </div>
 
     <div class="custom-card">
       <div class="row g-3">
-        <!-- Origin -->
         <div class="col-md-6">
-          <label class="form-label">Origin City / Pincode</label>
+          <label class="form-label fw-semibold">Origin City / Pincode</label>
           <input type="text" id="origin" class="form-control" value="Pune (411001)">
         </div>
 
-        <!-- Destination -->
         <div class="col-md-6">
-          <label class="form-label">Destination City / Pincode</label>
+          <label class="form-label fw-semibold">Destination City / Pincode</label>
           <input type="text" id="destination" class="form-control" value="Delhi (110001)">
         </div>
 
-        <!-- Weight -->
         <div class="col-md-6">
-          <label class="form-label">Estimated Weight (kg)</label>
+          <label class="form-label fw-semibold">Estimated Weight (kg)</label>
           <input type="number" id="weight" class="form-control" value="2.5" step="0.5" min="0.5" oninput="calculateRates()">
         </div>
 
-        <!-- Delivery Urgency -->
         <div class="col-md-6">
-          <label class="form-label">Delivery Urgency</label>
+          <label class="form-label fw-semibold">Delivery Urgency</label>
           <select id="urgency" class="form-select" onchange="calculateRates()">
             <option value="economy">Economy Surface (4-6 Days)</option>
             <option value="express" selected>Standard Express (2-3 Days)</option>
@@ -63,11 +72,10 @@
         </div>
       </div>
 
-      <div class="rate-section-title mt-4 mb-3">AVAILABLE FREIGHT RATES</div>
+      <div class="small fw-bold text-muted my-3" style="letter-spacing: 1px;">AVAILABLE FREIGHT RATES</div>
 
       <!-- 3 Tier Pricing Cards -->
       <div class="row g-3">
-        <!-- Surface Ground -->
         <div class="col-md-4">
           <div class="rate-card" id="card-ground" onclick="selectTier('ground')">
             <div class="rate-tier-name">SURFACE GROUND</div>
@@ -76,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Air Express (Popular) -->
         <div class="col-md-4">
           <div class="rate-card selected" id="card-express" onclick="selectTier('express')">
             <span class="badge-popular">POPULAR</span>
@@ -86,7 +93,6 @@
           </div>
         </div>
 
-        <!-- Next Day Prime -->
         <div class="col-md-4">
           <div class="rate-card" id="card-prime" onclick="selectTier('prime')">
             <div class="rate-tier-name text-danger">NEXT-DAY PRIME</div>
@@ -96,41 +102,31 @@
         </div>
       </div>
 
-      <!-- Proceed Button -->
       <div class="mt-4">
         <a href="/book" class="btn btn-dark w-100 py-3 fw-bold rounded-3">PROCEED WITH BOOKING →</a>
       </div>
     </div>
   </main>
 
-  <footer>
-    <p>© 2026 Ruwardhan Courier Management System</p>
+  <footer class="text-center text-muted py-4 small">
+    © 2026 Ruwardhan Courier Management System
   </footer>
 
-  <!-- Dynamic Rate Calculation Script -->
   <script>
     function calculateRates() {
       const weight = parseFloat(document.getElementById('weight').value) || 1;
-      
-      // Rates formula per kg
-      const ground = Math.round(weight * 65);
-      const express = Math.round(weight * 115);
-      const prime = Math.round(weight * 200);
-
-      document.getElementById('price-ground').innerText = ground;
-      document.getElementById('price-express').innerText = express;
-      document.getElementById('price-prime').innerText = prime;
+      document.getElementById('price-ground').innerText = Math.round(weight * 65);
+      document.getElementById('price-express').innerText = Math.round(weight * 115);
+      document.getElementById('price-prime').innerText = Math.round(weight * 200);
     }
 
     function selectTier(type) {
       document.getElementById('card-ground').classList.remove('selected');
       document.getElementById('card-express').classList.remove('selected');
       document.getElementById('card-prime').classList.remove('selected');
-
       document.getElementById('card-' + type).classList.add('selected');
     }
 
-    // Run on page load
     calculateRates();
   </script>
 </body>
