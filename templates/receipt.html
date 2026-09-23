@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courier Delivery Receipt - {{ s.tracking_id }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #c91818;
+      --text-dark: #1e1e1e;
+      --text-muted: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-dark);
+      padding: 30px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Page Container */
+    .receipt-page {
+      background: #ffffff;
+      width: 100%;
+      max-width: 650px;
+      min-height: 840px;
+      padding: 40px 48px;
+      border-radius: 4px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Red Speed Accent Stripes (Top Right) */
+    .accent-stripes {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 220px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: flex-end;
+      padding-top: 14px;
+      pointer-events: none;
+    }
+
+    .stripe {
+      background: var(--primary-red);
+      height: 12px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .s1 { width: 140px; }
+    .s2 { width: 190px; }
+    .s3 { width: 110px; }
+    .s4 { width: 170px; }
+
+    /* Left Accent Bar */
+    .left-bar {
+      position: absolute;
+      top: 115px;
+      left: 0;
+      width: 45px;
+      height: 9px;
+      background: var(--primary-red);
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+
+    /* Brand Header */
+    .brand-section {
+      margin-bottom: 35px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--primary-red);
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo span {
+      font-size: 1.5rem;
+    }
+
+    .brand-subtext {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Main Heading */
+    .receipt-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      text-align: center;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      margin: 25px 0 35px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Data Sections */
+    .info-group {
+      margin-bottom: 28px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .section-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .data-row {
+      display: flex;
+      margin-bottom: 4px;
+    }
+
+    .label {
+      font-weight: 700;
+      color: #1e293b;
+      min-width: 170px;
+    }
+
+    .value {
+      font-weight: 500;
+      color: #334155;
+    }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-print {
+      background: var(--primary-red);
+      color: #ffffff;
+    }
+
+    .btn-back {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Print Formatting */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+
+      .receipt-page {
+        box-shadow: none;
+        max-width: 100%;
+        padding: 40px;
+      }
+
+      .actions {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="receipt-page">
+    
+    <!-- Red Speed Top-Right Stripes -->
+    <div class="accent-stripes">
+      <div class="stripe s1"></div>
+      <div class="stripe s2"></div>
+      <div class="stripe s3"></div>
+      <div class="stripe s4"></div>
+    </div>
+
+    <!-- Red Left Bar Accent -->
+    <div class="left-bar"></div>
+
+    <!-- Company Branding Header -->
+    <div class="brand-section">
+      <div class="brand-logo">
+        <span>🚚</span> Ruwardhan Courier
+      </div>
+      <p class="brand-subtext">support@ruwardhan.in | ruwardhan-courier-1.onrender.com | +91 98220 00000</p>
+    </div>
+
+    <!-- Title -->
+    <h2 class="receipt-title">Courier Delivery Receipt</h2>
+
+    <!-- Primary Delivery Meta -->
+    <div class="info-group">
+      <div class="data-row">
+        <div class="label">Receipt Number:</div>
+        <div class="value">{{ s.tracking_id }}</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Booking Status:</div>
+        <div class="value" style="font-weight: 700; color: var(--primary-red);">{{ s.status }}</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Delivery Address:</div>
+        <div class="value">{{ s.receiver_address }}</div>
+      </div>
+    </div>
+
+    <!-- Sender Information -->
+    <div class="info-group">
+      <div class="section-heading">Sender Information:</div>
+      <div class="data-row">
+        <div class="label">Sender Name:</div>
+        <div class="value">{{ s.sender_name }}</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Service Mode:</div>
+        <div class="value">Standard Express Delivery</div>
+      </div>
+    </div>
+
+    <!-- Recipient & Courier Information -->
+    <div class="info-group">
+      <div class="section-heading">Consignee & Courier Information:</div>
+      <div class="data-row">
+        <div class="label">Receiver Name:</div>
+        <div class="value">{{ s.receiver_name }}</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Courier Company:</div>
+        <div class="value">Ruwardhan Logistics Management Ltd.</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Tracking Number:</div>
+        <div class="value" style="font-weight: 700; letter-spacing: 0.5px;">{{ s.tracking_id }}</div>
+      </div>
+      <div class="data-row">
+        <div class="label">Support Contact:</div>
+        <div class="value">+91 98220 00000 / support@ruwardhan.in</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Print and Back Action Buttons -->
+  <div class="actions">
+    <button class="btn btn-print" onclick="window.print()">🖨️ Print Receipt / Save as PDF</button>
+    <a href="/book" class="btn btn-back">← Back to Booking</a>
+  </div>
+
+</body>
+</html>
