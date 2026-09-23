@@ -3,63 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ruwardhan Courier Management System</title>
+  <title>New Consignment Booking - Ruwardhan Courier</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar-custom {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 14px 0;
+    }
+    .booking-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+      max-width: 620px;
+      margin: 40px auto;
+    }
+    .form-control {
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+    }
+    .form-control:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .btn-register {
+      background: #2563eb;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .btn-register:hover {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+  </style>
 </head>
 <body>
 
   <!-- Top Navbar -->
   <header class="navbar-custom">
     <div class="container d-flex justify-content-between align-items-center">
-      <div class="brand-title">
+      <a href="/" class="fw-bold fs-5 text-dark text-decoration-none">
         📦 Ruwardhan Courier
-      </div>
-      <div>
-        <a href="/" class="btn btn-sm btn-outline-custom">Back to Tracker</a>
+      </a>
+      <div class="d-flex gap-2">
+        <a href="/" class="btn btn-sm btn-outline-secondary">Live Track</a>
+        <a href="/calculator" class="btn btn-sm btn-outline-secondary">Rate Calculator</a>
+        <a href="/operations" class="btn btn-sm btn-outline-secondary">Operations Hub</a>
       </div>
     </div>
   </header>
 
-  <main class="container py-4" style="max-width: 620px;">
-    <div class="custom-card">
-      <h3 class="fw-bold mb-1">New Consignment Booking</h3>
-      <p class="text-muted mb-4 small">Fill the sender and recipient details to register a parcel.</p>
+  <!-- Booking Container Form -->
+  <div class="container flex-grow-1">
+    <div class="booking-card">
 
+      <div class="text-center mb-4">
+        <h3 class="fw-bold mb-1">New Consignment Booking</h3>
+        <p class="text-muted small">Fill the sender and recipient details to register a parcel.</p>
+      </div>
+
+      <!-- Success Receipt Banner -->
       {% if new_id %}
         <div class="alert alert-success text-center mb-4 rounded-3 p-3">
           <div class="fw-bold fs-6">Booking Successful!</div>
-          <div class="my-2 text-muted small">Tracking ID:</div>
-          <div class="badge bg-dark fs-4 px-3 py-2">{{ new_id }}</div>
-          <div class="mt-3">
-            <a href="/receipt/{{ new_id }}" target="_blank" class="btn btn-sm btn-dark px-3 py-1">🧾 View & Print Receipt (PDF)</a>
+          <div class="my-2 text-muted small">Tracking AWB:</div>
+          <div class="badge bg-dark fs-4 px-3 py-2 mb-3">{{ new_id }}</div>
+          <div>
+            <a href="/receipt/{{ new_id }}" target="_blank" class="btn btn-sm btn-primary px-3 py-2 fw-semibold">
+              🧾 View & Print Receipt (PDF)
+            </a>
           </div>
         </div>
       {% endif %}
 
       <form action="/book" method="POST">
         <div class="mb-3">
-          <label class="form-label">Sender's Full Name</label>
+          <label class="form-label small fw-bold text-secondary">Sender's Full Name</label>
           <input type="text" name="sender_name" class="form-control" placeholder="e.g. Ramesh Patil" required>
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Receiver's Full Name</label>
+          <label class="form-label small fw-bold text-secondary">Receiver's Full Name</label>
           <input type="text" name="receiver_name" class="form-control" placeholder="e.g. Priya Sharma" required>
         </div>
 
         <div class="mb-4">
-          <label class="form-label">Delivery Address & Pincode</label>
+          <label class="form-label small fw-bold text-secondary">Delivery Address & Pincode</label>
           <textarea name="receiver_address" class="form-control" rows="3" placeholder="Flat No., Street, City, State, PIN" required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary-custom w-100 py-3">Register Shipment</button>
+        <button type="submit" class="btn btn-register">Register Shipment</button>
       </form>
-    </div>
-  </main>
 
-  <footer>
-    <p>© 2026 Ruwardhan Courier Management System</p>
+    </div>
+  </div>
+
+  <footer class="text-center py-3 text-muted small border-top bg-white">
+    © 2026 Ruwardhan Courier Management System
   </footer>
 
 </body>
