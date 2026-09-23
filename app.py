@@ -66,8 +66,8 @@ def calculator():
     return render_template('calculator.html')
 
 # ADMIN AUTHENTICATION
-ADMIN_USER = "tejas"
-ADMIN_PASS = "tejas9028"
+ADMIN_USER = "abhijeet"
+ADMIN_PASS = "abhijeet9028"
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
